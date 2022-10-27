@@ -23,7 +23,7 @@ namespace CodeCrunch22.Services.Github
             var github = new GitHubClient(new Octokit.ProductHeaderValue("MyAmazingApp"));
             var tokenAuth = new Credentials(API_KEY);
             github.Credentials = tokenAuth;
-            var request = new SearchRepositoriesRequest(searchString)
+            var request = new SearchRepositoriesRequest(searchString == "" ? "language" : searchString)
             { PerPage = 10 };
             var result = await github.Search.SearchRepo(request);
             return result;
