@@ -61,14 +61,14 @@ app.MapGet("/stackoverflow", async ([FromServices] IStackOverflowService service
 
 app.MapGet("/github", async ([FromServices] IGithubService service, [FromQuery] string searchString) =>
 {
-    var response = await service.GetSearchData2Async(searchString);
-    var returnData = response.items.Select(x => new
+    var response = await service.GetSearchData(searchString);
+    var returnData = response.Items.Select(x => new
     {
-        Name = x.name,
-        Desciption = x.description,
-        Topics = x.topics,
-        Stars = x.stargazers_count,
-        Updated = x.updated_at
+        Name = x.Name,
+        Description = x.Description,
+        Topics = x.Topics,
+        Stars = x.StargazersCount,
+        Updated = x.UpdatedAt
 
     });
     return returnData;
