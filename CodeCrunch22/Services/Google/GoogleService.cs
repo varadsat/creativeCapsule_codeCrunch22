@@ -16,8 +16,9 @@ namespace CodeCrunch22.Services.Google
         }
         public async Task<GoogleSearchData> GetGoogleSearchDataAsync(string searchString)
         {
+           var term = searchString.Equals("") ? "lectures" : searchString;
            var response = await _clientFactory.CreateClient().GetFromJsonAsync<GoogleSearchData>
-                ($"https://www.googleapis.com/customsearch/v1?key={API_KEY}&cx=11da9b80b12ef4a20&q=lectures#");
+                ($"https://www.googleapis.com/customsearch/v1?key={API_KEY}&cx=11da9b80b12ef4a20&q={term}#");
            return response;
         }
     }

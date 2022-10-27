@@ -14,8 +14,9 @@ namespace CodeCrunch22.Services.Youtube
         }
         public async Task<YoutubeSearchData> GetSearchData(string searchString, string? pageToken="")
         {
+            var term = searchString.Equals("") ? "coding" : searchString;
             var response = await _clientFactory.CreateClient().GetFromJsonAsync<YoutubeSearchData>
-                ($"https://www.googleapis.com/youtube/v3/search?&part=snippet&type=video&pageToken={pageToken}&key={API_KEY}&regionCode=IN&q={searchString}");
+                ($"https://www.googleapis.com/youtube/v3/search?&part=snippet&type=video&pageToken={pageToken}&key={API_KEY}&regionCode=IN&q={term}");
             return response;
         }
     }
