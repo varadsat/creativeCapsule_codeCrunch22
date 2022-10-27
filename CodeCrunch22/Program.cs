@@ -1,4 +1,5 @@
 using CodeCrunch22.Services.Github;
+using CodeCrunch22.Services.Google;
 using CodeCrunch22.Services.StackOverflow;
 using CodeCrunch22.Services.Youtube;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +19,8 @@ builder.Services.AddHttpClient("SOClient").ConfigurePrimaryHttpMessageHandler(()
 builder.Services.AddSingleton<IYoutubeService, YoutubeService>();
 builder.Services.AddSingleton<IGithubService, GithubService>();
 builder.Services.AddSingleton<IStackOverflowService, StackOverflowService>();
+builder.Services.AddSingleton<IGoogleService, GoogleService>();
+
 var isDevelopment = builder.Environment.IsDevelopment();
 builder.Services.AddCors(options =>
                 options.AddDefaultPolicy(
@@ -78,15 +81,34 @@ app.MapGet("/stackoverflow", async ([FromServices] IStackOverflowService service
 
 app.MapGet("/github", async ([FromServices] IGithubService service, [FromQuery] string searchString) =>
 {
+    //TODO : try to remove octokit
+    //TODO : stars and date on frontend 
     var response = await service.GetSearchData(searchString);
     var returnData = response.Items.Select(x => new
     {
+        Id = x.Id,
         Name = x.Name,
         Description = x.Description,
         Topics = x.Topics,
         Stars = x.StargazersCount,
         Updated = x.UpdatedAt,
         Link = x.HtmlUrl
+    });
+    return returnData;
+});
+
+app.MapGet("/google", async ([FromServices] IGoogleService service, [FromQuery] string searchString) =>
+{
+    //TODO : try to remove octokit
+    //TODO : stars and date on frontend 
+    var response = await service.GetGoogleSearchDataAsync(searchString);
+    var returnData = response.items.Select(x => new
+    {
+        Id = x.cacheId,
+        Title = x.title,
+        Snippet = x.snippet,
+        DisplayLink = x.displayLink,
+        Link = x.link
     });
     return returnData;
 });
