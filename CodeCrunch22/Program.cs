@@ -33,7 +33,7 @@ app.MapGet("/youtube",async ([FromServices]IYoutubeService service,[FromQuery] s
 {
     //TODO: add that channel thumbnail, viewCount
     var response = await service.GetSearchData(searchString, pageToken);
-    var returnData = response.items.Select(v => new
+    var data = response.items.Select(v => new
     {
         VideoId = v.id.videoId,
         PublishedAt = v.snippet.publishedAt,
@@ -42,6 +42,11 @@ app.MapGet("/youtube",async ([FromServices]IYoutubeService service,[FromQuery] s
         Thumbnails = v.snippet.thumbnails,
         ChannelTitle = v.snippet.channelTitle
     });
+    var returnData = new
+    {
+        response.nextPageToken,
+        Items = data 
+    };
     return returnData;
 });
 
