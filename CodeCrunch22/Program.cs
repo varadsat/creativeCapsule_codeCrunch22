@@ -85,8 +85,8 @@ app.MapGet("/github", async ([FromServices] IGithubService service, [FromQuery] 
         Description = x.Description,
         Topics = x.Topics,
         Stars = x.StargazersCount,
-        Updated = x.UpdatedAt
-
+        Updated = x.UpdatedAt,
+        Link = x.HtmlUrl
     });
     return returnData;
 });
