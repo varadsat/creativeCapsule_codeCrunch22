@@ -62,10 +62,16 @@ app.MapGet("/stackoverflow", async ([FromServices] IStackOverflowService service
     var returnData = response.items.Select(x => new
     {
         Title = x.title,
+        Id = x.question_id,
         ProfileImage = x.owner.profile_image,
         DisplayName = x.owner.display_name,
         ViewCount = x.view_count,
-        AnswerCount = x.answer_count
+        AnswerCount = x.answer_count,
+        UpVotes = x.up_vote_count,
+        BodyMarkdown = x.body_markdown.Substring(0, Math.Min(x.body_markdown.Length, 200)),
+        Tags = x.tags,
+        Link = x.link,
+        LastActivity = x.last_activity_date
     });
     return returnData;
 });
