@@ -1,6 +1,7 @@
 using CodeCrunch22.Services.Github;
 using CodeCrunch22.Services.Google;
 using CodeCrunch22.Services.StackOverflow;
+using CodeCrunch22.Services.Twitter;
 using CodeCrunch22.Services.Youtube;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -10,16 +11,21 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+//TODO : Renove this if twitter gets fixed
+builder.Services.AddSwaggerGen(options =>
+{
+    options.CustomSchemaIds(type => type.ToString());
+});
 builder.Services.AddHttpClient();
 builder.Services.AddHttpClient("SOClient").ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
-        {
-            AutomaticDecompression = DecompressionMethods.GZip
-        });
+{
+    AutomaticDecompression = DecompressionMethods.GZip
+});
 builder.Services.AddSingleton<IYoutubeService, YoutubeService>();
 builder.Services.AddSingleton<IGithubService, GithubService>();
 builder.Services.AddSingleton<IStackOverflowService, StackOverflowService>();
 builder.Services.AddSingleton<IGoogleService, GoogleService>();
+builder.Services.AddSingleton<ITwitterService, TwitterService>();
 
 var isDevelopment = builder.Environment.IsDevelopment();
 builder.Services.AddCors(options =>
@@ -38,7 +44,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.MapGet("/youtube",async ([FromServices]IYoutubeService service,[FromQuery] string searchString, [FromQuery] string? pageToken) =>
+app.MapGet("/youtube", async ([FromServices] IYoutubeService service, [FromQuery] string searchString, [FromQuery] string? pageToken) =>
 {
     //TODO: add that channel thumbnail, viewCount
     var response = await service.GetSearchData(searchString, pageToken);
@@ -54,7 +60,7 @@ app.MapGet("/youtube",async ([FromServices]IYoutubeService service,[FromQuery] s
     var returnData = new
     {
         response.nextPageToken,
-        Items = data 
+        Items = data
     };
     return returnData;
 });
@@ -99,8 +105,6 @@ app.MapGet("/github", async ([FromServices] IGithubService service, [FromQuery] 
 
 app.MapGet("/google", async ([FromServices] IGoogleService service, [FromQuery] string searchString) =>
 {
-    //TODO : try to remove octokit
-    //TODO : stars and date on frontend 
     var response = await service.GetGoogleSearchDataAsync(searchString);
     var returnData = response.items.Select(x => new
     {
@@ -110,6 +114,24 @@ app.MapGet("/google", async ([FromServices] IGoogleService service, [FromQuery] 
         DisplayLink = x.displayLink,
         Link = x.link
     });
+    return returnData;
+});
+app.MapGet("/twitter", async ([FromServices] ITwitterService service, [FromQuery] string searchString) =>
+{
+    var response = await service.GetTwitterSearchDataAsync(searchString);
+        var returnData = response.statuses.Select(x => new
+        {
+            Id = x.id_str,
+            Text = x.text,
+            AuthorImg = x.user.profile_image_url,
+            AuthorUserName = x.user.screen_name,
+            AuthorName = x.user.name,
+            Link = x.entities.urls.FirstOrDefault()?.url ?? $"https://twitter.com/i/web/status/{x.id}",
+            AuthorProfileLink = $"https://twitter.com/{x.user.screen_name}",
+            RetweetCount = x.retweet_count,
+            FavoriteCount = x.favorite_count,
+            CreatedAt = x.created_at
+        });
     return returnData;
 });
 
