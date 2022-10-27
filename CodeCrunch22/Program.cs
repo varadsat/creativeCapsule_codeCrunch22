@@ -18,9 +18,15 @@ builder.Services.AddHttpClient("SOClient").ConfigurePrimaryHttpMessageHandler(()
 builder.Services.AddSingleton<IYoutubeService, YoutubeService>();
 builder.Services.AddSingleton<IGithubService, GithubService>();
 builder.Services.AddSingleton<IStackOverflowService, StackOverflowService>();
-
+var isDevelopment = builder.Environment.IsDevelopment();
+builder.Services.AddCors(options =>
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.AllowAnyHeader().AllowAnyMethod().WithOrigins(isDevelopment ? "http://127.0.0.1:5173" : "https://codecrunch22.netlify.app").AllowCredentials();
+                    }));
 var app = builder.Build();
-
+app.UseCors();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
