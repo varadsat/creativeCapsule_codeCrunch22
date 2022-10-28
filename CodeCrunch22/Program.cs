@@ -89,16 +89,16 @@ app.MapGet("/github", async ([FromServices] IGithubService service, [FromQuery] 
 {
     //TODO : try to remove octokit
     //TODO : stars and date on frontend 
-    var response = await service.GetSearchData(searchString);
-    var returnData = response.Items.Select(x => new
+    var response = await service.GetSearchData2Async(searchString);
+    var returnData = response.items.Select(x => new
     {
-        Id = x.Id,
-        Name = x.Name,
-        Description = x.Description,
-        Topics = x.Topics,
-        Stars = x.StargazersCount,
-        Updated = x.UpdatedAt,
-        Link = x.HtmlUrl
+        Id = x.id,
+        Name = x.name,
+        Description = x.description,
+        Topics = x.topics,
+        Stars = x.stargazers_count,
+        Updated = x.updated_at,
+        Link = x.html_url
     });
     return returnData;
 });

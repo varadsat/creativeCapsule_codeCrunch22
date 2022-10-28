@@ -1,6 +1,5 @@
 ﻿using CodeCrunch22.Models.Google;
 using CodeCrunch22.Models.Youtube;
-using Octokit;
 
 namespace CodeCrunch22.Services.Google
 {
