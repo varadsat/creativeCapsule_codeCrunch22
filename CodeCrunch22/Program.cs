@@ -77,7 +77,7 @@ app.MapGet("/stackoverflow", async ([FromServices] IStackOverflowService service
         ViewCount = x.view_count,
         AnswerCount = x.answer_count,
         UpVotes = x.up_vote_count,
-        BodyMarkdown = x.body_markdown.Substring(0, Math.Min(x.body_markdown.Length, 200)),
+        BodyMarkdown = x.body_markdown.Substring(0, Math.Min(x.body_markdown.Length, 150)),
         Tags = x.tags,
         Link = x.link,
         LastActivity = x.last_activity_date
