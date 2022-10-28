@@ -118,20 +118,24 @@ app.MapGet("/google", async ([FromServices] IGoogleService service, [FromQuery] 
 });
 app.MapGet("/twitter", async ([FromServices] ITwitterService service, [FromQuery] string searchString) =>
 {
-    var response = await service.GetTwitterSearchDataAsync(searchString);
-        var returnData = response.statuses.Select(x => new
-        {
-            Id = x.id_str,
-            Text = x.text,
-            AuthorImg = x.user.profile_image_url,
-            AuthorUserName = x.user.screen_name,
-            AuthorName = x.user.name,
-            Link = x.entities.urls.FirstOrDefault()?.url ?? $"https://twitter.com/i/web/status/{x.id}",
-            AuthorProfileLink = $"https://twitter.com/{x.user.screen_name}",
-            RetweetCount = x.retweet_count,
-            FavoriteCount = x.favorite_count,
-            CreatedAt = x.created_at
-        });
+    var response = await service.GetTwitterSearchDataV2Async(searchString);
+    var returnData = response.data.Join(response.includes.users,t=> t.author_id,u => u.id,
+        (t,u) => new
+    {
+        Id = t.id,
+        Text = t.text,
+        //Image = t.entities.urls.FirstOrDefault() ?? null,
+        AuthorImg = u.profile_image_url,
+        AuthorUserName = u.username,    
+        AuthorName = u.name,
+        Link = $"https://twitter.com/i/web/status/{t.id}",
+        AuthorProfileLink = $"https://twitter.com/{u.username}",
+        RetweetCount = t.public_metrics.retweet_count,
+        ReplyCount = t.public_metrics.reply_count,
+        LikeCount = t.public_metrics.like_count,
+        QuoteCount = t.public_metrics.quote_count,
+        CreatedAt = t.created_at
+    });
     return returnData;
 });
 
