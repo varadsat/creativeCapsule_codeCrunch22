@@ -32,7 +32,7 @@ builder.Services.AddCors(options =>
                 options.AddDefaultPolicy(
                     builder =>
                     {
-                        builder.AllowAnyHeader().AllowAnyMethod().WithOrigins(isDevelopment ? "http://127.0.0.1:5173" : "https://codecrunch22.netlify.app").AllowCredentials();
+                        builder.AllowAnyHeader().AllowAnyMethod().WithOrigins(isDevelopment ? "http://127.0.0.1:5173" : "https://codecrunch22.netlify.app", "https://codecrunch22.thevarad.me").AllowCredentials();
                     }));
 var app = builder.Build();
 app.UseCors();
