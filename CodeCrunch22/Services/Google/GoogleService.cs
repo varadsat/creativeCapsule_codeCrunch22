@@ -10,7 +10,7 @@ namespace CodeCrunch22.Services.Google
 
         public GoogleService(IConfiguration configuration, IHttpClientFactory clientFactory)
         {
-            API_KEY = configuration["Google:API_KEY"];
+            API_KEY = configuration["Google_API_KEY"];
             _clientFactory = clientFactory;
         }
         public async Task<GoogleSearchData> GetGoogleSearchDataAsync(string searchString)

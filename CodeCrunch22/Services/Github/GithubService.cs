@@ -15,7 +15,7 @@ namespace CodeCrunch22.Services.Github
         public GithubService(IHttpClientFactory clientFactory, IConfiguration configuration)
         {
             _clientFactory = clientFactory;
-            API_KEY = configuration["Github:API_KEY"];
+            API_KEY = configuration["Github_API_KEY"];
         }
 
         public async Task<GithubSearchData> GetSearchData2Async(string searchString)

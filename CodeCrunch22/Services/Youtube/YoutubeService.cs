@@ -9,7 +9,7 @@ namespace CodeCrunch22.Services.Youtube
 
         public YoutubeService(IConfiguration configuration, IHttpClientFactory clientFactory)
         {
-            API_KEY = configuration["Google:API_KEY"];
+            API_KEY = configuration["Google_API_KEY"];
             _clientFactory = clientFactory;
         }
         public async Task<YoutubeSearchData> GetSearchData(string searchString, string? pageToken="")

@@ -16,7 +16,7 @@ namespace CodeCrunch22.Services.Twitter
         public TwitterService(IHttpClientFactory clientFactory, IConfiguration configuration)
         {
             _clientFactory = clientFactory;
-            BEARER_TOKEN = configuration["Twitter:BEARER_TOKEN"];
+            BEARER_TOKEN = configuration["Twitter_BEARER_TOKEN"];
         }
         public async Task<TwitterSearchData> GetTwitterSearchDataAsync(string searchString)
         {
