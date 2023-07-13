@@ -43,7 +43,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
 app.MapGet("/youtube", async ([FromServices] IYoutubeService service, [FromQuery] string searchString, [FromQuery] string? pageToken) =>
 {
     //TODO: add that channel thumbnail, viewCount
